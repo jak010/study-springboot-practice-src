@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: demo
+
+  datasource:
+    url: jdbc:mysql://demo_db:19999/demo?useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul
+    username: root
+    password: 1234
