@@ -1,5 +1,6 @@
 package com.practic.demo.member;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,6 +8,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@Builder
 public class MemberEntity {
 
     private Long memberId;

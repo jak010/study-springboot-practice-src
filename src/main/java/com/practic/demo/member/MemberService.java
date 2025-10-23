@@ -1,7 +1,6 @@
 package com.practic.demo.member;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface MemberService {
 
@@ -19,7 +18,7 @@ public interface MemberService {
      * @param memberId - 회원 식별코드
      * @return - 회원 정보
      */
-    Optional<MemberEntity> getMemberById(Long memberId);
+    MemberEntity getMemberById(Long memberId);
 
     /**
      * [MEM_03] 회원 정보 조회 (목록)
