@@ -2,12 +2,14 @@ package com.practic.demo.member;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 
 @Repository
@@ -37,16 +39,23 @@ public class MemberRepository {
     };
 
 
-    public MemberEntity findByMemberId(Long memberId) {
-        String query = String.format("SELECT * FROM %s WHERE member_id = :memberId;", TABLE);
+    public Optional<MemberEntity> findByMemberId(Long memberId) {
+        final String query = String.format("SELECT * FROM %s WHERE member_id = :memberId;", TABLE);
         final MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource()
                 .addValue("memberId", memberId);
 
-        return namedParameterJdbcTemplate.queryForObject(
-                query,
-                mapSqlParameterSource,
-                memberEntityRowMapper
-        );
+
+        try {
+            return Optional.ofNullable(
+                    namedParameterJdbcTemplate.queryForObject(
+                            query,
+                            mapSqlParameterSource,
+                            memberEntityRowMapper
+                    ));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
+
 
 }

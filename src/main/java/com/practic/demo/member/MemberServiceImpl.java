@@ -1,5 +1,6 @@
 package com.practic.demo.member;
 
+import com.practic.demo.member.exceptions.MemberNotFound;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,8 +20,8 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public MemberEntity getMemberById(Long memberId) {
-        Optional<MemberEntity> memberEntity = Optional.ofNullable(memberRepository.findByMemberId(memberId));
-        return memberEntity.orElseThrow(RuntimeException::new);
+        return memberRepository.findByMemberId(memberId)
+                .orElseThrow(MemberNotFound::new);
     }
 
     @Override
