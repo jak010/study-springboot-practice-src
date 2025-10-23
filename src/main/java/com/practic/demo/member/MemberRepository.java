@@ -44,7 +44,7 @@ public class MemberRepository {
         final MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource()
                 .addValue("memberId", memberId);
 
-
+        // Hack, 25.10.23 : try~catch에 따라 Optional로 분기처리하는 코드라 이상해보인다.
         try {
             return Optional.ofNullable(
                     namedParameterJdbcTemplate.queryForObject(
