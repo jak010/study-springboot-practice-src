@@ -59,7 +59,7 @@ public class MemberRepository {
     }
 
     public List<MemberEntity> findByMemberIds(List<Integer> memberIds) {
-        final String query = String.format("SELECT * FROM %s WHERE member_id in :memberIds;", TABLE);
+        final String query = String.format("SELECT * FROM %s WHERE member_id in (:memberIds);", TABLE);
         final MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource()
                 .addValue("memberIds", memberIds);
 
