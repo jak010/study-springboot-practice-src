@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -55,6 +56,20 @@ public class MemberRepository {
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
+    }
+
+    public List<MemberEntity> findByMemberIds(List<Integer> memberIds) {
+        final String query = String.format("SELECT * FROM %s WHERE member_id in :memberIds;", TABLE);
+        final MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource()
+                .addValue("memberIds", memberIds);
+
+
+        return namedParameterJdbcTemplate.query(
+                query,
+                mapSqlParameterSource,
+                memberEntityRowMapper
+        );
+
     }
 
 

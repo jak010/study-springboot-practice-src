@@ -25,7 +25,7 @@ public interface MemberService {
      *
      * @return - 회원 정보 목록
      */
-    List<MemberEntity> getAllMembers();
+    List<MemberEntity> getAllMembers(List<Integer> memberIds);
 
     /**
      * [MEM_04] 회원 상태 변경

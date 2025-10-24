@@ -1,11 +1,15 @@
 package com.practic.demo.member;
 
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,5 +24,10 @@ public class MemberController {
 
     }
 
+
+    @GetMapping("/member")
+    public List<MemberEntity> getMembers(@Param("memberIds") List<Integer> memberIds) {
+        return memberService.getAllMembers(memberIds);
+    }
 
 }

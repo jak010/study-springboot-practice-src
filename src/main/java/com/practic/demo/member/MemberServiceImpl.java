@@ -23,8 +23,8 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public List<MemberEntity> getAllMembers() {
-        return List.of();
+    public List<MemberEntity> getAllMembers(List<Integer> memberIds) {
+        return memberRepository.findByMemberIds(memberIds);
     }
 
     @Override
