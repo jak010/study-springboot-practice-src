@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -20,8 +19,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public MemberEntity getMemberById(Long memberId) {
-        return memberRepository.findByMemberId(memberId)
-                .orElseThrow(MemberNotFound::new);
+        return memberRepository.findByMemberId(memberId).orElseThrow(MemberNotFound::new);
     }
 
     @Override

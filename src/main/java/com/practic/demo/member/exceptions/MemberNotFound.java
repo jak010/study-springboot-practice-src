@@ -1,13 +1,17 @@
 package com.practic.demo.member.exceptions;
 
-public class MemberNotFound extends RuntimeException {
+import com.practic.demo.settings.DomainException;
+import lombok.Getter;
 
-    private final Long statusCode = 400L;
-    private final String message = "사용자를 찾을 수 없음";
+@Getter
+public class MemberNotFound extends DomainException {
 
 
-    @Override
-    public String toString() {
-        return super.toString();
+    private static final Long code = 4001L;
+    private static final String message = "사용자를 찾을 수 없음";
+
+
+    public MemberNotFound() {
+        super(code, message);
     }
 }
