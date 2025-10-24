@@ -1,10 +1,8 @@
 package com.practic.demo.member;
 
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,8 +18,9 @@ public class MemberController {
 
 
     @GetMapping("/member/{memberId}")
-    public MemberEntity getMember(@PathVariable("memberId") Long memberId) {
-        return memberService.getMemberById(memberId);
+    public ResponseEntity<MemberEntity> getMember(@PathVariable("memberId") Long memberId) {
+        return ResponseEntity.ok()
+                .body(memberService.getMemberById(memberId));
 
     }
 
