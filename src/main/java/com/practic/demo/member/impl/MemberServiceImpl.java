@@ -17,6 +17,8 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public MemberEntity registerMember(MemberCommand.CreateMember command) {
 
+        // TODO, 25-10-26 : Duplicated 처리 필요
+
         MemberEntity memberEntity = MemberEntity.newMember(command);
 
         MemberEntity savedMember = memberRepository.save(memberEntity);

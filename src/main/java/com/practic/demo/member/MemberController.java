@@ -33,13 +33,6 @@ public class MemberController {
             @RequestBody MemberCommand.CreateMember createMember
 
     ) {
-//        MemberCommand.CreateMember command = MemberCommand.CreateMember.builder()
-//                .email(email)
-//                .password(password)
-//                .nickName(nickName)
-//                .build();
-
-
         return memberService.registerMember(createMember);
     }
 

@@ -46,7 +46,6 @@ public class MemberRepositoryImpl implements MemberRepository {
 
     @Override
     public MemberEntity save(MemberEntity memberEntity) {
-
         // Java Text Block(Java 15이상)
         final String insertQuery = """
                         INSERT INTO %s (
