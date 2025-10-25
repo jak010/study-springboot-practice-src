@@ -10,7 +10,7 @@ public interface MemberService {
      * @param memberEntity - 회원 정보
      * @return - 등록된 회원 정보
      */
-    MemberEntity registerMember(MemberEntity memberEntity);
+    MemberEntity registerMember(MemberCommand.CreateMember command);
 
     /**
      * [MEM_02] 회원 정보 조회 (단건)
@@ -22,6 +22,7 @@ public interface MemberService {
 
     /**
      * [MEM_03] 회원 정보 조회 (목록)
+     * - ToDo, 25.10.26 -  Paging 구현
      *
      * @return - 회원 정보 목록
      */

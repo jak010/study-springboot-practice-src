@@ -1,6 +1,8 @@
-package com.practic.demo.member;
+package com.practic.demo.member.impl;
 
+import com.practic.demo.member.*;
 import com.practic.demo.member.exceptions.MemberNotFound;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,8 +15,13 @@ public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
 
     @Override
-    public MemberEntity registerMember(MemberEntity memberEntity) {
-        return null;
+    public MemberEntity registerMember(MemberCommand.CreateMember command) {
+
+        MemberEntity memberEntity = MemberEntity.newMember(command);
+
+        MemberEntity savedMember = memberRepository.save(memberEntity);
+
+        return savedMember;
     }
 
     @Override

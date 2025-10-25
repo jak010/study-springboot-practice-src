@@ -2,11 +2,9 @@ package com.practic.demo.member;
 
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.ScopeMetadata;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,6 +26,21 @@ public class MemberController {
     @GetMapping("/member")
     public List<MemberEntity> getMembers(@RequestParam("memberIds") List<Integer> memberIds) {
         return memberService.getAllMembers(memberIds);
+    }
+
+    @PostMapping("/member")
+    public MemberEntity saveMember(
+            @RequestBody MemberCommand.CreateMember createMember
+
+    ) {
+//        MemberCommand.CreateMember command = MemberCommand.CreateMember.builder()
+//                .email(email)
+//                .password(password)
+//                .nickName(nickName)
+//                .build();
+
+
+        return memberService.registerMember(createMember);
     }
 
 }
