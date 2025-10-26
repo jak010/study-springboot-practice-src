@@ -78,7 +78,26 @@ public class MemberRepositoryImpl implements MemberRepository {
     }
 
     @Override
-    public Optional<MemberEntity> findByMemberId(Long memberId) {
+    public Optional<MemberEntity> findMemberByEmail(String email) {
+        final String query = String.format("SELECT * FROM %s WHERE email = :email;", TABLE);
+        final MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("email", email);
+
+        // Hack, 25.10.23 : try~catch에 따라 Optional로 분기처리하는 코드라 이상해보인다.
+        try {
+            return Optional.ofNullable(
+                    namedParameterJdbcTemplate.queryForObject(
+                            query,
+                            params,
+                            memberEntityRowMapper
+                    ));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public Optional<MemberEntity> findMemberById(Long memberId) {
         final String query = String.format("SELECT * FROM %s WHERE member_id = :memberId;", TABLE);
         final MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource()
                 .addValue("memberId", memberId);

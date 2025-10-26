@@ -1,12 +1,13 @@
 package com.practic.demo.member.impl;
 
 import com.practic.demo.member.*;
+import com.practic.demo.member.exceptions.MemberDuplicated;
 import com.practic.demo.member.exceptions.MemberNotFound;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -16,19 +17,20 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public MemberEntity registerMember(MemberCommand.CreateMember command) {
+        Optional<MemberEntity> existMember = memberRepository.findMemberByEmail(command.getEmail());
 
-        // TODO, 25-10-26 : Duplicated 처리 필요
+        if (existMember.isPresent()) {
+            throw new MemberDuplicated();
+        }
+
 
         MemberEntity memberEntity = MemberEntity.newMember(command);
-
-        MemberEntity savedMember = memberRepository.save(memberEntity);
-
-        return savedMember;
+        return memberRepository.save(memberEntity);
     }
 
     @Override
     public MemberEntity getMemberById(Long memberId) {
-        return memberRepository.findByMemberId(memberId).orElseThrow(MemberNotFound::new);
+        return memberRepository.findMemberById(memberId).orElseThrow(MemberNotFound::new);
     }
 
     @Override

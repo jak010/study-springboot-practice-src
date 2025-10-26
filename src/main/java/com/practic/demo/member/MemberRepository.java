@@ -7,7 +7,9 @@ public interface MemberRepository {
 
     MemberEntity save(MemberEntity memberEntity);
 
-    Optional<MemberEntity> findByMemberId(Long memberId);
+    Optional<MemberEntity> findMemberByEmail(String email);
+
+    Optional<MemberEntity> findMemberById(Long memberId);
 
     List<MemberEntity> findByMemberIds(List<Integer> memberIds);
 
