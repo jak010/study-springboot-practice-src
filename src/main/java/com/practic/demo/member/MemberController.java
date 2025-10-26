@@ -2,7 +2,6 @@ package com.practic.demo.member;
 
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.ScopeMetadata;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,10 +29,17 @@ public class MemberController {
 
     @PostMapping("/member")
     public MemberEntity saveMember(
-            @RequestBody MemberCommand.CreateMember createMember
-
+            @RequestBody MemberCommand.CreateMemberCommand createMember
     ) {
         return memberService.registerMember(createMember);
+    }
+
+    @PutMapping("/member/{memberId}/status")
+    public MemberEntity updateMemberStatus(
+            @PathVariable("memberId") Long memberId,
+            @RequestBody MemberCommand.updateMemberChangeCommand status
+    ) {
+        return memberService.updateMemberStatus(memberId, status.getStatus());
     }
 
 }

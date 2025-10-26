@@ -11,10 +11,22 @@ public class MemberCommand {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class CreateMember {
+    public static class CreateMemberCommand {
         private String email;
         private String password;
         private String nickName;
+
+
+    }
+
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class updateMemberChangeCommand {
+        private MemberStatus status;
+
+
 
 
     }

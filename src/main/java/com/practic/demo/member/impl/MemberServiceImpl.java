@@ -16,7 +16,7 @@ public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
 
     @Override
-    public MemberEntity registerMember(MemberCommand.CreateMember command) {
+    public MemberEntity registerMember(MemberCommand.CreateMemberCommand command) {
         Optional<MemberEntity> existMember = memberRepository.findMemberByEmail(command.getEmail());
 
         if (existMember.isPresent()) {
@@ -40,6 +40,12 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public MemberEntity updateMemberStatus(Long memberId, MemberStatus status) {
+        MemberEntity memberEntity = memberRepository.findMemberById(memberId)
+                .orElseThrow(MemberNotFound::new);
+
+
+
+
         return null;
     }
 }

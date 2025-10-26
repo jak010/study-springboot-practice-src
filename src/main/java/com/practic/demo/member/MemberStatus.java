@@ -16,4 +16,6 @@ public enum MemberStatus {
         return status;
     }
 
+
+
 }

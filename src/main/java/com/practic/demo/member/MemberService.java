@@ -10,7 +10,7 @@ public interface MemberService {
      * @param memberEntity - 회원 정보
      * @return - 등록된 회원 정보
      */
-    MemberEntity registerMember(MemberCommand.CreateMember command);
+    MemberEntity registerMember(MemberCommand.CreateMemberCommand command);
 
     /**
      * [MEM_02] 회원 정보 조회 (단건)

@@ -13,7 +13,6 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -126,6 +125,25 @@ public class MemberRepositoryImpl implements MemberRepository {
                 query,
                 mapSqlParameterSource,
                 memberEntityRowMapper
+        );
+
+    }
+
+    @Override
+    public int updateMemberStatus(Long memberId, String status) {
+
+        final String query = String.format("""
+                UPDATE %s
+                SET status = :status
+                WHERE member_id = :memberId;
+                """, TABLE);
+        final MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("status", status);
+        params.addValue("memberId", memberId);
+
+        return namedParameterJdbcTemplate.update(
+                query,
+                params
         );
 
     }

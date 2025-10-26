@@ -4,10 +4,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.lang.reflect.Member;
 import java.time.LocalDateTime;
 import java.util.Objects;
-import java.util.Optional;
 
 @Getter
 @Setter
@@ -33,7 +31,7 @@ public class MemberEntity {
      * @return
      */
 
-    public static MemberEntity newMember(MemberCommand.CreateMember command
+    public static MemberEntity newMember(MemberCommand.CreateMemberCommand command
     ) {
         Objects.requireNonNull(command.getEmail());
         Objects.requireNonNull(command.getNickName());
