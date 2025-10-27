@@ -8,9 +8,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.beans.Transient;
 import java.util.List;
 import java.util.Optional;
+
 
 @Service
 @RequiredArgsConstructor
@@ -18,29 +18,62 @@ public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
 
+    /**
+     * [MEM_01] 회원 가입
+     *
+     * @param command - 회원 정보
+     * @return - 등록된 회원 정보
+     */
     @Override
     public MemberEntity registerMember(MemberCommand.CreateMemberCommand command) {
-        Optional<MemberEntity> existMember = memberRepository.findMemberByEmail(command.getEmail());
+        Optional<MemberEntity> emailExistMember = memberRepository.findMemberByEmail(
+                command.getEmail()
+        );
 
-        if (existMember.isPresent()) {
+        if (emailExistMember.isPresent()) {
             throw new MemberDuplicated();
         }
 
+        Optional<MemberEntity> nickNameExistMember = Optional.ofNullable(
+                isNicknameDuplicate(command.getNickName())
+        );
+        if (nickNameExistMember.isPresent()) {
+            throw new MemberDuplicated();
+        }
 
         MemberEntity memberEntity = MemberEntity.newMember(command);
         return memberRepository.save(memberEntity);
     }
 
+    /**
+     * [MEM_02] 회원 정보 조회 (단건)
+     *
+     * @param memberId - 회원 식별코드
+     * @return - 회원 정보
+     */
     @Override
     public MemberEntity getMemberById(Long memberId) {
         return memberRepository.findMemberById(memberId).orElseThrow(MemberNotFound::new);
     }
 
+    /**
+     * [MEM_03] 회원 정보 조회 (목록)
+     * - ToDo, 25.10.26 -  Paging 구현
+     *
+     * @return - 회원 정보 목록
+     */
     @Override
     public List<MemberEntity> getAllMembers(List<Integer> memberIds) {
         return memberRepository.findByMemberIds(memberIds);
     }
 
+    /**
+     * [MEM_04] 회원 상태 변경
+     *
+     * @param memberId - 회원 식별코드
+     * @param status   - 변경할 상태
+     * @return - 변경된 회원 정보
+     */
     @Override
     @Transactional
     public MemberEntity updateMemberStatus(Long memberId, MemberStatus status) {
@@ -51,10 +84,18 @@ public class MemberServiceImpl implements MemberService {
             throw new MemberStatusAlreadySet();
         }
 
+        return memberRepository.updateMemberStatus(memberEntity, status.getStatus());
+    }
 
-        MemberEntity updatedMember = memberRepository.updateMemberStatus(memberEntity, status.getStatus());
-
-
-        return updatedMember;
+    /**
+     * [MEM_06] 닉네임 중복 체스트
+     *
+     * @param nickname - 닉네임
+     * @return - 중복된 회원 정보
+     */
+    @Override
+    public MemberEntity isNicknameDuplicate(String nickname) {
+        return memberRepository.findMemberByNickName(nickname)
+                .orElseThrow(MemberNotFound::new);
     }
 }

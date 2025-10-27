@@ -13,6 +13,8 @@ public interface MemberRepository {
 
     List<MemberEntity> findByMemberIds(List<Integer> memberIds);
 
+    Optional<MemberEntity> findMemberByNickName(String nickName);
+
 
     MemberEntity updateMemberStatus(MemberEntity memberEntity, String status);
 

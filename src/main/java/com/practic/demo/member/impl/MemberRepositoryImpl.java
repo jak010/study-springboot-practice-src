@@ -4,6 +4,7 @@ import com.practic.demo.member.MemberEntity;
 import com.practic.demo.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -110,6 +111,27 @@ public class MemberRepositoryImpl implements MemberRepository {
                 mapSqlParameterSource,
                 new BeanPropertyRowMapper<>(MemberEntity.class)
         );
+
+    }
+
+    @Override
+    public Optional<MemberEntity> findMemberByNickName(String nickName) {
+
+        final String query = String.format("SELECT * FROM %s WHERE nickname = :nickName;");
+        final MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("nickName", nickName);
+
+        try {
+            return Optional.ofNullable(
+                    namedParameterJdbcTemplate.queryForObject(
+                            query,
+                            params,
+                            new BeanPropertyRowMapper<>(MemberEntity.class)
+                    ));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+
 
     }
 

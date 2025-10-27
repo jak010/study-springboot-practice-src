@@ -38,4 +38,9 @@ public interface MemberService {
     MemberEntity updateMemberStatus(Long memberId, MemberStatus status);
 
 
+    /**
+     * [MEM_06] 닉네임 중복 체크
+     */
+    MemberEntity isNicknameDuplicate(String nickname);
+
 }
