@@ -25,6 +25,7 @@ public class MemberServiceImpl implements MemberService {
      * @return - 등록된 회원 정보
      */
     @Override
+    @Transactional
     public MemberEntity registerMember(MemberCommand.CreateMemberCommand command) {
         Optional<MemberEntity> isSavedMember = memberRepository.duplicateCheck(command.getEmail(), command.getNickName());
         if (isSavedMember.isPresent()) {
@@ -48,6 +49,7 @@ public class MemberServiceImpl implements MemberService {
      * @return - 회원 정보
      */
     @Override
+    @Transactional
     public MemberEntity getMemberById(Long memberId) {
         return memberRepository.findMemberById(memberId).orElseThrow(MemberNotFound::new);
     }
@@ -59,6 +61,7 @@ public class MemberServiceImpl implements MemberService {
      * @return - 회원 정보 목록
      */
     @Override
+    @Transactional
     public List<MemberEntity> getAllMembers(List<Integer> memberIds) {
         return memberRepository.findMemberByIds(memberIds);
     }
@@ -89,7 +92,15 @@ public class MemberServiceImpl implements MemberService {
      * @return - 중복된 회원 정보
      */
     @Override
+    @Transactional
     public MemberEntity isNicknameDuplicate(String nickname) {
         return memberRepository.findMemberByNickName(nickname).orElseThrow(MemberNotFound::new);
+    }
+
+    @Override
+    @Transactional
+    public boolean deleteMember(Long memberId) {
+        return memberRepository.deleteMemberById(memberId);
+
     }
 }

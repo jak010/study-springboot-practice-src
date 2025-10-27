@@ -42,4 +42,12 @@ public class MemberController {
         return memberService.updateMemberStatus(memberId, status.getStatus());
     }
 
+
+    @DeleteMapping("/member/{memberId}")
+    public void deleteMember(
+            @PathVariable("memberId") Long memberId
+    ) {
+        memberService.deleteMember(memberId);
+    }
+
 }

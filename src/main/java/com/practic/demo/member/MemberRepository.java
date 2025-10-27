@@ -19,4 +19,5 @@ public interface MemberRepository {
 
     MemberEntity updateMemberStatus(MemberEntity memberEntity, String status);
 
+    boolean deleteMemberById(Long memberId);
 }

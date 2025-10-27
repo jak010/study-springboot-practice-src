@@ -181,5 +181,23 @@ public class MemberRepositoryImpl implements MemberRepository {
         return memberEntity;
     }
 
+    @Override
+    public boolean deleteMemberById(Long memberId) {
+        final String query = String.format("""
+                UPDATE %s SET
+                status = :status,
+                updated_at = :updatedAt
+                WHERE member_id = :memberId;
+                """, TABLE);
+        final MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("status", "BLOCKED");
+        params.addValue("memberId", memberId);
+        params.addValue("updatedAt", LocalDateTime.now());
+
+        int result = namedParameterJdbcTemplate.update(query, params);
+        return result > 1;
+
+    }
+
 
 }

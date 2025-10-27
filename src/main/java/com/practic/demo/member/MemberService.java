@@ -43,4 +43,7 @@ public interface MemberService {
      */
     MemberEntity isNicknameDuplicate(String nickname);
 
+
+    boolean deleteMember(Long memberId);
+
 }
