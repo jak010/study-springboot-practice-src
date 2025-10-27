@@ -14,6 +14,6 @@ public interface MemberRepository {
     List<MemberEntity> findByMemberIds(List<Integer> memberIds);
 
 
-    int updateMemberStatus(Long memberId, String status);
+    MemberEntity updateMemberStatus(MemberEntity memberEntity, String status);
 
 }

@@ -130,22 +130,28 @@ public class MemberRepositoryImpl implements MemberRepository {
     }
 
     @Override
-    public int updateMemberStatus(Long memberId, String status) {
+    public MemberEntity updateMemberStatus(MemberEntity memberEntity, String status) {
 
         final String query = String.format("""
-                UPDATE %s
-                SET status = :status
+                UPDATE %s SET
+                status = :status,
+                updated_at = :updatedAt
                 WHERE member_id = :memberId;
                 """, TABLE);
         final MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("status", status);
-        params.addValue("memberId", memberId);
+        params.addValue("memberId", memberEntity.getMemberId());
+        params.addValue("updatedAt", LocalDateTime.now());
 
-        return namedParameterJdbcTemplate.update(
-                query,
-                params
-        );
+        int result = namedParameterJdbcTemplate.update(query, params);
 
+        if (result < 1) {
+            return memberEntity;
+        }
+
+
+        memberEntity.setStatus(status);
+        return memberEntity;
     }
 
 

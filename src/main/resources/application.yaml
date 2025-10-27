@@ -6,6 +6,14 @@ spring:
     name: demo
 
   datasource:
-    url: jdbc:mysql://127.0.0.1:19999/demo?useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul
+    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+    url: jdbc:log4jdbc:mysql://127.0.0.1:19999/demo?useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul
     username: root
     password: 1234
+
+
+# 트랜잭션 로깅 확인하기
+logging:
+  level:
+    org.springframework.transaction.interceptor: trace
+

@@ -5,7 +5,9 @@ import com.practic.demo.member.exceptions.MemberDuplicated;
 import com.practic.demo.member.exceptions.MemberNotFound;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.beans.Transient;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,13 +41,14 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    @Transactional
     public MemberEntity updateMemberStatus(Long memberId, MemberStatus status) {
         MemberEntity memberEntity = memberRepository.findMemberById(memberId)
                 .orElseThrow(MemberNotFound::new);
 
+        MemberEntity updatedMember = memberRepository.updateMemberStatus(memberEntity, status.getStatus());
 
 
-
-        return null;
+        return updatedMember;
     }
 }
