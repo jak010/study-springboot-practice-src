@@ -26,22 +26,18 @@ public class MemberServiceImpl implements MemberService {
      */
     @Override
     public MemberEntity registerMember(MemberCommand.CreateMemberCommand command) {
-        Optional<MemberEntity> emailExistMember = memberRepository.findMemberByEmail(
-                command.getEmail()
-        );
-
-        if (emailExistMember.isPresent()) {
+        Optional<MemberEntity> isSavedMember = memberRepository.duplicateCheck(command.getEmail(), command.getNickName());
+        if (isSavedMember.isPresent()) {
             throw new MemberDuplicated();
         }
 
-        Optional<MemberEntity> nickNameExistMember = Optional.ofNullable(
-                isNicknameDuplicate(command.getNickName())
-        );
-        if (nickNameExistMember.isPresent()) {
-            throw new MemberDuplicated();
-        }
 
-        MemberEntity memberEntity = MemberEntity.newMember(command);
+        MemberEntity memberEntity = MemberEntity.newMemberBuilder()
+                .email(command.getEmail())
+                .nickName(command.getNickName())
+                .password(command.getPassword())
+                .build();
+
         return memberRepository.save(memberEntity);
     }
 
@@ -64,7 +60,7 @@ public class MemberServiceImpl implements MemberService {
      */
     @Override
     public List<MemberEntity> getAllMembers(List<Integer> memberIds) {
-        return memberRepository.findByMemberIds(memberIds);
+        return memberRepository.findMemberByIds(memberIds);
     }
 
     /**
@@ -77,8 +73,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public MemberEntity updateMemberStatus(Long memberId, MemberStatus status) {
-        MemberEntity memberEntity = memberRepository.findMemberById(memberId)
-                .orElseThrow(MemberNotFound::new);
+        MemberEntity memberEntity = memberRepository.findMemberById(memberId).orElseThrow(MemberNotFound::new);
 
         if (memberEntity.statusCompare(status)) {
             throw new MemberStatusAlreadySet();
@@ -95,7 +90,6 @@ public class MemberServiceImpl implements MemberService {
      */
     @Override
     public MemberEntity isNicknameDuplicate(String nickname) {
-        return memberRepository.findMemberByNickName(nickname)
-                .orElseThrow(MemberNotFound::new);
+        return memberRepository.findMemberByNickName(nickname).orElseThrow(MemberNotFound::new);
     }
 }

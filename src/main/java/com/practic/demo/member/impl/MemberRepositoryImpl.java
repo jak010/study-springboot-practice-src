@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -100,7 +101,7 @@ public class MemberRepositoryImpl implements MemberRepository {
     }
 
     @Override
-    public List<MemberEntity> findByMemberIds(List<Integer> memberIds) {
+    public List<MemberEntity> findMemberByIds(List<Integer> memberIds) {
         final String query = String.format("SELECT * FROM %s WHERE member_id in (:memberIds);", TABLE);
         final MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource()
                 .addValue("memberIds", memberIds);
@@ -119,6 +120,27 @@ public class MemberRepositoryImpl implements MemberRepository {
 
         final String query = String.format("SELECT * FROM %s WHERE nickname = :nickName;");
         final MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("nickName", nickName);
+
+        try {
+            return Optional.ofNullable(
+                    namedParameterJdbcTemplate.queryForObject(
+                            query,
+                            params,
+                            new BeanPropertyRowMapper<>(MemberEntity.class)
+                    ));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+
+
+    }
+
+    @Override
+    public Optional<MemberEntity> duplicateCheck(String email, String nickName) {
+        final String query = String.format("SELECT * FROM %s WHERE email = :email AND nickname = :nickName;", TABLE);
+        final MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("email", email);
         params.addValue("nickName", nickName);
 
         try {

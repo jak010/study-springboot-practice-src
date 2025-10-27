@@ -33,25 +33,22 @@ public class MemberEntity {
      * @return
      */
 
+    @Builder(builderMethodName = "newMemberBuilder")
+    public MemberEntity(String email, String nickName, String password) {
+        Objects.requireNonNull(email);
+        Objects.requireNonNull(nickName);
+        Objects.requireNonNull(password);
 
-    public static MemberEntity newMember(MemberCommand.CreateMemberCommand command
-    ) {
-        Objects.requireNonNull(command.getEmail());
-        Objects.requireNonNull(command.getNickName());
-        Objects.requireNonNull(command.getPassword());
-
-        MemberEntity newMemberEntity = new MemberEntity();
-        newMemberEntity.setMemberId(null);
-        newMemberEntity.setEmail(command.getEmail());
-        newMemberEntity.setNickName(command.getNickName());
-        newMemberEntity.setPassword(command.getPassword());
-        newMemberEntity.setPhoneNumber(null);
-        newMemberEntity.setStatus("ACTIVE");
-        newMemberEntity.setCreatedAt(LocalDateTime.now());
-        newMemberEntity.setUpdatedAt(LocalDateTime.now());
-
-        return newMemberEntity;
+        this.memberId = null;
+        this.email = email;
+        this.nickName = nickName;
+        this.password = password;
+        this.phoneNumber = null;
+        this.status = "ACTIVE";
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
+
 
     public boolean statusCompare(MemberStatus newStatus) {
         return status.equals(newStatus.getStatus());

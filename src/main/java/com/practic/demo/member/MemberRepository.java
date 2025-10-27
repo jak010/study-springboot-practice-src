@@ -11,10 +11,11 @@ public interface MemberRepository {
 
     Optional<MemberEntity> findMemberById(Long memberId);
 
-    List<MemberEntity> findByMemberIds(List<Integer> memberIds);
+    List<MemberEntity> findMemberByIds(List<Integer> memberIds);
 
     Optional<MemberEntity> findMemberByNickName(String nickName);
 
+    Optional<MemberEntity> duplicateCheck(String email, String nickName);
 
     MemberEntity updateMemberStatus(MemberEntity memberEntity, String status);
 
