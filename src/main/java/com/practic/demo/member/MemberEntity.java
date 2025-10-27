@@ -1,6 +1,5 @@
 package com.practic.demo.member;
 
-import com.practic.demo.member.exceptions.MemberStatusAlreadySet;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
