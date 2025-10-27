@@ -26,9 +26,6 @@ public class MemberCommand {
     public static class updateMemberChangeCommand {
         private MemberStatus status;
 
-
-
-
     }
 
 }
