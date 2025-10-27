@@ -1,5 +1,6 @@
 package com.practic.demo.member;
 
+import com.practic.demo.member.exceptions.MemberStatusAlreadySet;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -47,6 +48,11 @@ public class MemberEntity {
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .build();
+    }
+
+    public boolean statusCompare(MemberStatus newStatus) {
+        return status.equals(newStatus.getStatus());
+
     }
 
 }

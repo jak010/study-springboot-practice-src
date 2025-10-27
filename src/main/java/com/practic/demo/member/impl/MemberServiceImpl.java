@@ -3,6 +3,7 @@ package com.practic.demo.member.impl;
 import com.practic.demo.member.*;
 import com.practic.demo.member.exceptions.MemberDuplicated;
 import com.practic.demo.member.exceptions.MemberNotFound;
+import com.practic.demo.member.exceptions.MemberStatusAlreadySet;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,6 +46,11 @@ public class MemberServiceImpl implements MemberService {
     public MemberEntity updateMemberStatus(Long memberId, MemberStatus status) {
         MemberEntity memberEntity = memberRepository.findMemberById(memberId)
                 .orElseThrow(MemberNotFound::new);
+
+        if (memberEntity.statusCompare(status)) {
+            throw new MemberStatusAlreadySet();
+        }
+
 
         MemberEntity updatedMember = memberRepository.updateMemberStatus(memberEntity, status.getStatus());
 
