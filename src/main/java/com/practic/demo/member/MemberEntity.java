@@ -3,6 +3,7 @@ package com.practic.demo.member;
 import com.practic.demo.member.exceptions.MemberStatusAlreadySet;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
@@ -10,7 +11,7 @@ import java.util.Objects;
 
 @Getter
 @Setter
-@Builder
+@NoArgsConstructor
 public class MemberEntity {
 
     private Long memberId;
@@ -32,22 +33,24 @@ public class MemberEntity {
      * @return
      */
 
+
     public static MemberEntity newMember(MemberCommand.CreateMemberCommand command
     ) {
         Objects.requireNonNull(command.getEmail());
         Objects.requireNonNull(command.getNickName());
         Objects.requireNonNull(command.getPassword());
 
-        return MemberEntity.builder()
-                .memberId(null)
-                .email(command.getEmail())
-                .nickName(command.getNickName())
-                .password(command.getPassword())
-                .phoneNumber(null)
-                .status("ACTIVE")
-                .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
-                .build();
+        MemberEntity newMemberEntity = new MemberEntity();
+        newMemberEntity.setMemberId(null);
+        newMemberEntity.setEmail(command.getEmail());
+        newMemberEntity.setNickName(command.getNickName());
+        newMemberEntity.setPassword(command.getPassword());
+        newMemberEntity.setPhoneNumber(null);
+        newMemberEntity.setStatus("ACTIVE");
+        newMemberEntity.setCreatedAt(LocalDateTime.now());
+        newMemberEntity.setUpdatedAt(LocalDateTime.now());
+
+        return newMemberEntity;
     }
 
     public boolean statusCompare(MemberStatus newStatus) {

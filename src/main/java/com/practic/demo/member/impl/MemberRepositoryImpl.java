@@ -5,7 +5,7 @@ import com.practic.demo.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -26,22 +26,6 @@ public class MemberRepositoryImpl implements MemberRepository {
     @Autowired
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    RowMapper<MemberEntity> memberEntityRowMapper = (rs, rowNum) -> {
-        String status = rs.getString("status");
-        java.sql.Timestamp createdTs = rs.getTimestamp("created_at");
-        java.sql.Timestamp updatedTs = rs.getTimestamp("updated_at");
-
-        return MemberEntity.builder()
-                .memberId(rs.getLong("member_id"))
-                .nickName(rs.getString("nick_name"))
-                .email(rs.getString("email"))
-                .password(rs.getString("password"))
-                .phoneNumber(rs.getString("phone_number"))
-                .status(status != null ? status : "ACTIVE")
-                .createdAt(createdTs != null ? createdTs.toLocalDateTime() : LocalDateTime.now())
-                .updatedAt(updatedTs != null ? updatedTs.toLocalDateTime() : LocalDateTime.now())
-                .build();
-    };
 
     @Override
     public MemberEntity save(MemberEntity memberEntity) {
@@ -88,7 +72,7 @@ public class MemberRepositoryImpl implements MemberRepository {
                     namedParameterJdbcTemplate.queryForObject(
                             query,
                             params,
-                            memberEntityRowMapper
+                            new BeanPropertyRowMapper<>(MemberEntity.class)
                     ));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
@@ -107,7 +91,7 @@ public class MemberRepositoryImpl implements MemberRepository {
                     namedParameterJdbcTemplate.queryForObject(
                             query,
                             mapSqlParameterSource,
-                            memberEntityRowMapper
+                            new BeanPropertyRowMapper<>(MemberEntity.class)
                     ));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
@@ -124,7 +108,7 @@ public class MemberRepositoryImpl implements MemberRepository {
         return namedParameterJdbcTemplate.query(
                 query,
                 mapSqlParameterSource,
-                memberEntityRowMapper
+                new BeanPropertyRowMapper<>(MemberEntity.class)
         );
 
     }
@@ -148,7 +132,6 @@ public class MemberRepositoryImpl implements MemberRepository {
         if (result < 1) {
             return memberEntity;
         }
-
 
         memberEntity.setStatus(status);
         return memberEntity;
