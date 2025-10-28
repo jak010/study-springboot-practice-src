@@ -1,12 +1,13 @@
 package com.practic.demo.member.impl;
 
-import com.practic.demo.config.JasyptConfig;
 import com.practic.demo.member.*;
-import com.practic.demo.member.exceptions.MemberDuplicated;
-import com.practic.demo.member.exceptions.MemberNotFound;
-import com.practic.demo.member.exceptions.MemberStatusAlreadySet;
+import com.practic.demo.member.exceptions.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.jasypt.encryption.StringEncryptor;
+import org.jasypt.exceptions.EncryptionOperationNotPossibleException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -15,16 +16,23 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
 
+    private static final Logger log = LoggerFactory.getLogger(MemberServiceImpl.class);
+
+
     @Autowired
     @Qualifier("aesEncryptor")
     private final StringEncryptor aesEncryptor;
+
+    @Autowired
+    @Qualifier("desEncryptor")
+    private final StringEncryptor desEncryptor;
 
     /**
      * [MEM_01] 회원 가입
@@ -110,5 +118,27 @@ public class MemberServiceImpl implements MemberService {
     public boolean deleteMember(Long memberId) {
         return memberRepository.deleteMemberById(memberId);
 
+    }
+
+
+    @Override
+    @Transactional
+    public void changePassword(Long memberId, String password) {
+        MemberEntity memberEntity = memberRepository.findMemberById(memberId).orElseThrow(MemberNotFound::new);
+
+        // 기존에 저장된 password가 복호화가 불가능한 경우 어떻게 대처할 수 있을까 ?
+        try {
+            String originPassword = desEncryptor.decrypt(memberEntity.getPassword());
+            if (originPassword.equals(password)) {
+                throw new MemberPasswordIsOriginPassword();
+            }
+        } catch (EncryptionOperationNotPossibleException e) { // 25-10-28: 암호화에 사용된 알고리즘이 다른 경우에도 해당 에러가 발생한다.
+            log.warn("회원 ID {} 비밀번호 복호화 실패: {}", memberId, e.getMessage());
+        }
+
+
+        memberEntity.setPassword(desEncryptor.encrypt(password));
+        memberRepository.updateMemberPassword(memberEntity);
+        System.out.println("?>");
     }
 }

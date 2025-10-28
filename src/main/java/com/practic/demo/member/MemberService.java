@@ -46,4 +46,7 @@ public interface MemberService {
 
     boolean deleteMember(Long memberId);
 
+
+    void changePassword(Long memberId, String password);
+
 }

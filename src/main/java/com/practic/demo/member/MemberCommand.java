@@ -28,4 +28,14 @@ public class MemberCommand {
 
     }
 
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class updateMemberPasswordCommand {
+        private String password;
+
+    }
+
+
 }

@@ -4,17 +4,16 @@ import com.practic.demo.member.MemberEntity;
 import com.practic.demo.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -179,6 +178,25 @@ public class MemberRepositoryImpl implements MemberRepository {
 
         memberEntity.setStatus(status);
         return memberEntity;
+    }
+
+    @Override
+    public MemberEntity updateMemberPassword(MemberEntity memberEntity) {
+        final String query = String.format("""
+                UPDATE %s SET
+                  password = :password,
+                  updated_at = :updated_at
+                WHERE member_id = :member_id;
+                """, TABLE);
+        final MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("password", memberEntity.getPassword());
+        params.addValue("updated_at", LocalDateTime.now());
+        params.addValue("member_id", memberEntity.getMemberId());
+
+        namedParameterJdbcTemplate.update(query, params);
+
+        return memberEntity;
+
     }
 
     @Override

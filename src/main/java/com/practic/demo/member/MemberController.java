@@ -50,4 +50,12 @@ public class MemberController {
         memberService.deleteMember(memberId);
     }
 
+    @PutMapping("/member/{memberId}/password-change")
+    public void updatePassword(
+            @PathVariable("memberId") Long memberId,
+            @RequestBody MemberCommand.updateMemberPasswordCommand command
+    ) {
+        memberService.changePassword(memberId, command.getPassword());
+    }
+
 }

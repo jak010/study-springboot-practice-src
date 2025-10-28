@@ -6,10 +6,12 @@ import org.jasypt.encryption.pbe.PooledPBEStringEncryptor;
 import org.jasypt.encryption.pbe.config.SimpleStringPBEConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
 @Configuration
 public class JasyptConfig {
 
+    @Primary
     @Bean(name = "aesEncryptor")
     public StringEncryptor aesEncryptor() {
         PooledPBEStringEncryptor encryptor = new PooledPBEStringEncryptor();
@@ -27,5 +29,25 @@ public class JasyptConfig {
         encryptor.setConfig(config);
         return encryptor;
     }
+
+
+    @Bean(name = "desEncryptor")
+    public StringEncryptor desEncryptor() {
+        PooledPBEStringEncryptor encryptor = new PooledPBEStringEncryptor();
+        SimpleStringPBEConfig config = new SimpleStringPBEConfig();
+
+
+        config.setProvider(new BouncyCastleProvider());
+        config.setPassword("test"); // 암호화 키
+        config.setAlgorithm("PBEWithSHA1AndDESede");
+        config.setKeyObtentionIterations("1000");
+        config.setPoolSize("1");
+        config.setSaltGeneratorClassName("org.jasypt.salt.RandomSaltGenerator");
+        config.setStringOutputType("base64");
+
+        encryptor.setConfig(config);
+        return encryptor;
+    }
+
 
 }
