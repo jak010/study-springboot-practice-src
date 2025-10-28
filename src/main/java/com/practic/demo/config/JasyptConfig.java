@@ -2,22 +2,19 @@ package com.practic.demo.config;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.jasypt.encryption.StringEncryptor;
-import org.jasypt.encryption.pbe.PooledPBEBigDecimalEncryptor;
 import org.jasypt.encryption.pbe.PooledPBEStringEncryptor;
 import org.jasypt.encryption.pbe.config.SimpleStringPBEConfig;
-import org.jasypt.registry.AlgorithmRegistry;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class JasyptConfig {
 
-    @Bean(name = "jasyptStringEncryptor")
-    public StringEncryptor stringEncryptor() {
+    @Bean(name = "aesEncryptor")
+    public StringEncryptor aesEncryptor() {
         PooledPBEStringEncryptor encryptor = new PooledPBEStringEncryptor();
         SimpleStringPBEConfig config = new SimpleStringPBEConfig();
 
-        System.out.println(AlgorithmRegistry.getAllPBEAlgorithms());
 
         config.setProvider(new BouncyCastleProvider());
         config.setPassword("test"); // 암호화 키

@@ -1,10 +1,14 @@
 package com.practic.demo.member.impl;
 
+import com.practic.demo.config.JasyptConfig;
 import com.practic.demo.member.*;
 import com.practic.demo.member.exceptions.MemberDuplicated;
 import com.practic.demo.member.exceptions.MemberNotFound;
 import com.practic.demo.member.exceptions.MemberStatusAlreadySet;
 import lombok.RequiredArgsConstructor;
+import org.jasypt.encryption.StringEncryptor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +21,10 @@ import java.util.Optional;
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
+
+    @Autowired
+    @Qualifier("aesEncryptor")
+    private final StringEncryptor aesEncryptor;
 
     /**
      * [MEM_01] 회원 가입
@@ -36,7 +44,7 @@ public class MemberServiceImpl implements MemberService {
         MemberEntity memberEntity = MemberEntity.newMemberBuilder()
                 .email(command.getEmail())
                 .nickName(command.getNickName())
-                .password(command.getPassword())
+                .password(aesEncryptor.encrypt(command.getPassword()))
                 .build();
 
         return memberRepository.save(memberEntity);

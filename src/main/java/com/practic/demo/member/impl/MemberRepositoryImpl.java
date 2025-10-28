@@ -138,7 +138,7 @@ public class MemberRepositoryImpl implements MemberRepository {
 
     @Override
     public Optional<MemberEntity> duplicateCheck(String email, String nickName) {
-        final String query = String.format("SELECT * FROM %s WHERE email = :email AND nickname = :nickName;", TABLE);
+        final String query = String.format("SELECT * FROM %s WHERE email = :email AND nick_name = :nickName;", TABLE);
         final MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("email", email);
         params.addValue("nickName", nickName);

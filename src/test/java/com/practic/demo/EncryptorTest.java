@@ -18,16 +18,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class EncryptorTest {
 
     @Autowired
-    @Qualifier("jasyptStringEncryptor")
-    private StringEncryptor encryptor;
+    @Qualifier("AESEncryptor")
+    private StringEncryptor aesEncryptor;
 
 
     @Test
     @DisplayName("jasypt 암호화 테스트")
     public void test() {
         String original = "secret";
-        String encrypted = encryptor.encrypt(original);
-        String decrypted = encryptor.decrypt(encrypted);
+        String encrypted = aesEncryptor.encrypt(original);
+        String decrypted = aesEncryptor.decrypt(encrypted);
 
         System.out.println("Encrypted: " + encrypted);
         System.out.println("Decrypted: " + decrypted);
