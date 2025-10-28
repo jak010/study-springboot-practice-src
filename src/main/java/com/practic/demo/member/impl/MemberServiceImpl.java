@@ -141,4 +141,19 @@ public class MemberServiceImpl implements MemberService {
         memberRepository.updateMemberPassword(memberEntity);
         System.out.println("?>");
     }
+
+    @Override
+    @Transactional
+    public void resetPassword(Long memberId) {
+        final String temporalPassword = "qwer1234!";
+
+        String temporalPasswordEncryptor = aesEncryptor.encrypt(temporalPassword);
+
+        MemberEntity memberEntity = memberRepository.findMemberById(memberId)
+                .orElseThrow(MemberNotFound::new);
+        memberEntity.setPassword(temporalPasswordEncryptor);
+
+
+        memberRepository.updateMemberPassword(memberEntity);
+    }
 }

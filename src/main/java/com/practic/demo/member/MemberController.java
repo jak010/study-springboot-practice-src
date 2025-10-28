@@ -58,4 +58,11 @@ public class MemberController {
         memberService.changePassword(memberId, command.getPassword());
     }
 
+    @PutMapping("/member/{memberId}/reset-password")
+    public void resetPassword(
+            @PathVariable("memberId") Long memberId
+    ) {
+        memberService.resetPassword(memberId);
+    }
+
 }
