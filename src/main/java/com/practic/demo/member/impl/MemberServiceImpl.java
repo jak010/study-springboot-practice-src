@@ -115,8 +115,8 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     @Transactional
-    public boolean deleteMember(Long memberId) {
-        return memberRepository.deleteMemberById(memberId);
+    public void deleteMember(Long memberId) {
+        memberRepository.deleteMemberById(memberId);
 
     }
 

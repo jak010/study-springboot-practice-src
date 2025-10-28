@@ -62,10 +62,9 @@ public interface MemberService {
      * 특정 회원 식별코드(ID)를 사용하여 회원을 탈퇴 처리합니다.
      *
      * @param memberId - 탈퇴할 회원의 식별코드
-     * @return - 탈퇴 성공 여부 (true: 성공, false: 실패)
      * @throws com.practic.demo.member.exceptions.MemberNotFound - 해당 ID의 회원을 찾을 수 없을 경우 발생
      */
-    boolean deleteMember(Long memberId);
+    void deleteMember(Long memberId);
 
     /**
      * [MEM_08] 비밀번호 변경
