@@ -13,6 +13,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -108,12 +110,24 @@ public class MemberServiceImpl implements MemberService {
      * [MEM_06] 닉네임 중복 체스트
      *
      * @param nickname - 닉네임
-     * @return - 중복된 회원 정보
+     * @return - 중복 여부 (true: 중복, false: 중복 아님)
      */
     @Override
     @Transactional
-    public MemberEntity isNicknameDuplicate(String nickname) {
-        return memberRepository.findMemberByNickName(nickname).orElseThrow(MemberNotFound::new);
+    public boolean isNicknameDuplicate(String nickname) {
+        return memberRepository.findMemberByNickName(nickname).isPresent();
+    }
+
+    /**
+     * [MEM_05] 이메일 중복 체크
+     *
+     * @param email - 이메일
+     * @return - 중복 여부 (true: 중복, false: 중복 아님)
+     */
+    @Override
+    @Transactional
+    public boolean isEmailDuplicate(String email) {
+        return memberRepository.findMemberByEmail(email).isPresent();
     }
 
     @Override
@@ -123,6 +137,34 @@ public class MemberServiceImpl implements MemberService {
 
     }
 
+    /**
+     * [MEM_07] 회원 정보 수정
+     *
+     * @param memberId - 회원 식별코드
+     * @param command  - 회원 정보 수정 요청 커맨드
+     * @return - 수정된 회원 정보
+     */
+    @Override
+    @Transactional
+    public MemberEntity updateMemberInfo(Long memberId, MemberCommand.UpdateMemberInfoCommand command) {
+        MemberEntity memberEntity = memberRepository.findMemberById(memberId).orElseThrow(MemberNotFound::new);
+
+        // 닉네임 변경 시 중복 체크
+        if (!memberEntity.getNickName().equals(command.getNickName()) && isNicknameDuplicate(command.getNickName())) {
+            throw new MemberDuplicated();
+        }
+
+        // 이메일 변경 시 중복 체크
+        if (!memberEntity.getEmail().equals(command.getEmail()) && isEmailDuplicate(command.getEmail())) {
+            throw new MemberDuplicated();
+        }
+
+        memberEntity.setNickName(command.getNickName());
+        memberEntity.setEmail(command.getEmail());
+        memberEntity.setPhoneNumber(command.getPhoneNumber());
+
+        return memberRepository.updateMemberInfo(memberEntity);
+    }
 
     @Override
     @Transactional
@@ -158,5 +200,10 @@ public class MemberServiceImpl implements MemberService {
 
 
         memberRepository.updateMemberPassword(memberEntity);
+    }
+
+    @Override
+    public Page<MemberEntity> getMembersByStatus(MemberStatus status, Pageable pageable) {
+        return null;
     }
 }

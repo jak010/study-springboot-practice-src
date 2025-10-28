@@ -1,10 +1,15 @@
 package com.practic.demo.member.impl;
 
 import com.practic.demo.member.MemberEntity;
+import com.practic.demo.member.MemberEntity;
 import com.practic.demo.member.MemberRepository;
+import com.practic.demo.member.MemberStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -197,6 +202,28 @@ public class MemberRepositoryImpl implements MemberRepository {
 
         return memberEntity;
 
+    }
+
+    @Override
+    public MemberEntity updateMemberInfo(MemberEntity memberEntity) {
+        final String query = String.format("""
+                UPDATE %s SET
+                  nick_name = :nickName,
+                  email = :email,
+                  phone_number = :phoneNumber,
+                  updated_at = :updatedAt
+                WHERE member_id = :memberId;
+                """, TABLE);
+        final MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("nickName", memberEntity.getNickName());
+        params.addValue("email", memberEntity.getEmail());
+        params.addValue("phoneNumber", memberEntity.getPhoneNumber());
+        params.addValue("updatedAt", LocalDateTime.now());
+        params.addValue("memberId", memberEntity.getMemberId());
+
+        namedParameterJdbcTemplate.update(query, params);
+
+        return memberEntity;
     }
 
     @Override

@@ -37,5 +37,13 @@ public class MemberCommand {
 
     }
 
-
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class UpdateMemberInfoCommand {
+        private String nickName;
+        private String email;
+        private String phoneNumber;
+    }
 }

@@ -1,5 +1,8 @@
 package com.practic.demo.member;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -20,6 +23,10 @@ public interface MemberRepository {
     MemberEntity updateMemberStatus(MemberEntity memberEntity, String status);
 
     MemberEntity updateMemberPassword(MemberEntity memberEntity);
+
+    MemberEntity updateMemberInfo(MemberEntity memberEntity);
+
+    Page<MemberEntity> findMembersByStatus(MemberStatus status, Pageable pageable);
 
     boolean deleteMemberById(Long memberId);
 }

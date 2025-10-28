@@ -1,5 +1,8 @@
 package com.practic.demo.member;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import java.util.List;
 
 public interface MemberService {
@@ -52,10 +55,18 @@ public interface MemberService {
      * 주어진 닉네임이 이미 사용 중인지 확인합니다.
      *
      * @param nickname - 중복 체크할 닉네임
-     * @return - 중복된 닉네임을 가진 회원 정보 (MemberEntity), 중복이 아니면 null
+     * @return - 중복 여부 (true: 중복, false: 중복 아님)
      */
-    MemberEntity isNicknameDuplicate(String nickname);
+    boolean isNicknameDuplicate(String nickname);
 
+    /**
+     * [MEM_05] 이메일 중복 체크
+     * 주어진 이메일이 이미 사용 중인지 확인합니다.
+     *
+     * @param email - 중복 체크할 이메일
+     * @return - 중복 여부 (true: 중복, false: 중복 아님)
+     */
+    boolean isEmailDuplicate(String email);
 
     /**
      * [MEM_07] 회원 탈퇴
@@ -65,6 +76,18 @@ public interface MemberService {
      * @throws com.practic.demo.member.exceptions.MemberNotFound - 해당 ID의 회원을 찾을 수 없을 경우 발생
      */
     void deleteMember(Long memberId);
+
+    /**
+     * [MEM_07] 회원 정보 수정
+     * 특정 회원의 정보를 수정합니다.
+     *
+     * @param memberId - 정보를 수정할 회원의 식별코드
+     * @param command  - 회원 정보 수정 요청 커맨드 (닉네임, 이메일, 전화번호 포함)
+     * @return - 수정된 회원 정보 (MemberEntity)
+     * @throws com.practic.demo.member.exceptions.MemberNotFound - 해당 ID의 회원을 찾을 수 없을 경우 발생
+     * @throws com.practic.demo.member.exceptions.MemberDuplicated - 닉네임 또는 이메일이 중복될 경우 발생
+     */
+    MemberEntity updateMemberInfo(Long memberId, MemberCommand.UpdateMemberInfoCommand command);
 
     /**
      * [MEM_08] 비밀번호 변경
@@ -86,4 +109,14 @@ public interface MemberService {
      * @throws com.practic.demo.member.exceptions.MemberNotFound - 해당 ID의 회원을 찾을 수 없을 경우 발생
      */
     void resetPassword(Long memberId);
+
+    /**
+     * [SRC_01] 상태별 회원 조회
+     * 특정 상태의 회원 목록을 페이징하여 조회합니다.
+     *
+     * @param status   - 조회할 회원 상태
+     * @param pageable - 페이징 정보
+     * @return - 페이징된 회원 정보 목록 (Page<MemberEntity>)
+     */
+    Page<MemberEntity> getMembersByStatus(MemberStatus status, Pageable pageable);
 }
