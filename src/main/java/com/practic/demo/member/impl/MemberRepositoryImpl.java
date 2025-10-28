@@ -227,6 +227,11 @@ public class MemberRepositoryImpl implements MemberRepository {
     }
 
     @Override
+    public Page<MemberEntity> findMembersByStatus(MemberStatus status, Pageable pageable) {
+        return null;
+    }
+
+    @Override
     public boolean deleteMemberById(Long memberId) {
         final String query = String.format("""
                 UPDATE %s SET
