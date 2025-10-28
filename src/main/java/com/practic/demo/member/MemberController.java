@@ -17,14 +17,14 @@ public class MemberController {
     @GetMapping("/member/{memberId}")
     public ResponseEntity<MemberEntity> getMember(@PathVariable("memberId") Long memberId) {
         return ResponseEntity.ok()
-                .body(memberService.getMemberById(memberId));
+                .body(memberService.getMember(memberId));
 
     }
 
 
     @GetMapping("/member")
     public List<MemberEntity> getMembers(@RequestParam("memberIds") List<Integer> memberIds) {
-        return memberService.getAllMembers(memberIds);
+        return memberService.getMembers(memberIds);
     }
 
     @PostMapping("/member")

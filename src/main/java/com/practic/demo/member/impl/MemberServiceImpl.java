@@ -69,7 +69,7 @@ public class MemberServiceImpl implements MemberService {
      */
     @Override
     @Transactional
-    public MemberEntity getMemberById(Long memberId) {
+    public MemberEntity getMember(Long memberId) {
         return memberRepository.findMemberById(memberId).orElseThrow(MemberNotFound::new);
     }
 
@@ -81,7 +81,7 @@ public class MemberServiceImpl implements MemberService {
      */
     @Override
     @Transactional
-    public List<MemberEntity> getAllMembers(List<Integer> memberIds) {
+    public List<MemberEntity> getMembers(List<Integer> memberIds) {
         return memberRepository.findMemberByIds(memberIds);
     }
 

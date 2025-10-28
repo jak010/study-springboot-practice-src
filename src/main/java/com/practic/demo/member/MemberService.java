@@ -21,7 +21,7 @@ public interface MemberService {
      * @return - 조회된 회원 정보 (MemberEntity)
      * @throws com.practic.demo.member.exceptions.MemberNotFound - 해당 ID의 회원을 찾을 수 없을 경우 발생
      */
-    MemberEntity getMemberById(Long memberId);
+    MemberEntity getMember(Long memberId);
 
     /**
      * [MEM_03] 회원 정보 조회 (목록)
@@ -31,7 +31,7 @@ public interface MemberService {
      * @param memberIds - 조회할 회원 식별코드 목록
      * @return - 조회된 회원 정보 목록 (List<MemberEntity>)
      */
-    List<MemberEntity> getAllMembers(List<Integer> memberIds);
+    List<MemberEntity> getMembers(List<Integer> memberIds);
 
     /**
      * [MEM_04] 회원 상태 변경
