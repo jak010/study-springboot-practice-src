@@ -2,6 +2,7 @@ package com.practic.demo.contrib;
 
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.http.ResponseEntity;
 
 @Getter
 public class ApiResponse<T> {
@@ -15,11 +16,14 @@ public class ApiResponse<T> {
         this.data = data;
     }
 
-    public static <T> ApiResponse<T> of(T data) {
-        return ApiResponse.<T>defaultBuilder()
+
+    public static <T> ResponseEntity<ApiResponse<T>> of(T data) {
+        ApiResponse<T> body = ApiResponse.<T>defaultBuilder()
                 .statusCode(200)
                 .data(data)
                 .build();
+
+        return ResponseEntity.ok(body);
     }
 
 

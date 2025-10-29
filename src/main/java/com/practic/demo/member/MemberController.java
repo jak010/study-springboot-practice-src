@@ -3,7 +3,6 @@ package com.practic.demo.member;
 
 import com.practic.demo.contrib.ApiResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,22 +15,20 @@ public class MemberController {
 
 
     @GetMapping("/member/{memberId}")
-    public ResponseEntity<ApiResponse<MemberEntity>> getMember(
+    public ApiResponse<MemberEntity> getMember(
             @PathVariable("memberId") Long memberId
     ) {
-        return ResponseEntity.ok(
-                ApiResponse.of(memberService.getMember(memberId))
-        );
+        return ApiResponse.of(memberService.getMember(memberId))
+                .getBody();
     }
 
 
     @GetMapping("/member")
-    public ResponseEntity<ApiResponse<List<MemberEntity>>> getMembers(
+    public ApiResponse<List<MemberEntity>> getMembers(
             @RequestParam("memberIds") List<Integer> memberIds
     ) {
-        return ResponseEntity.ok(
-                ApiResponse.of(memberService.getMembers(memberIds))
-        );
+        return ApiResponse.of(memberService.getMembers(memberIds))
+                .getBody();
     }
 
     @PostMapping("/member")
