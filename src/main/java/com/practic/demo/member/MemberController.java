@@ -3,8 +3,10 @@ package com.practic.demo.member;
 
 import com.practic.demo.contrib.ApiResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -68,5 +70,14 @@ public class MemberController {
     ) {
         memberService.resetPassword(memberId);
     }
+
+    @GetMapping("/member/joinedDate")
+    public List<MemberEntity> getMemberJoinedDate(
+            @RequestParam("start") LocalDate start,
+            @RequestParam("end") LocalDate end
+    ) {
+        return memberService.getMembersByJoinDate(start, end);
+    }
+
 
 }

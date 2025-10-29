@@ -14,6 +14,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -246,5 +247,21 @@ public class MemberRepositoryImpl implements MemberRepository {
 
     }
 
+    @Override
+    public List<MemberEntity> findMemberByCreatedDate(LocalDate start, LocalDate end) {
+        final String query = String.format("""
+                SELECT * 
+                FROM %s
+                WHERE created_at BETWEEN :start and :end;                
+                """, TABLE);
+        final MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("start", start);
+        params.addValue("end", end);
 
+        return namedParameterJdbcTemplate.query(
+                query,
+                params,
+                new BeanPropertyRowMapper<>(MemberEntity.class)
+        );
+    }
 }

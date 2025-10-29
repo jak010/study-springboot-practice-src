@@ -3,6 +3,7 @@ package com.practic.demo.member;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface MemberService {
@@ -43,7 +44,7 @@ public interface MemberService {
      * @param memberId - 상태를 변경할 회원의 식별코드
      * @param status   - 변경할 새로운 회원 상태
      * @return - 상태가 변경된 회원 정보 (MemberEntity)
-     * @throws com.practic.demo.member.exceptions.MemberNotFound - 해당 ID의 회원을 찾을 수 없을 경우 발생
+     * @throws com.practic.demo.member.exceptions.MemberNotFound         - 해당 ID의 회원을 찾을 수 없을 경우 발생
      * @throws com.practic.demo.member.exceptions.MemberStatusAlreadySet - 이미 요청된 상태로 설정되어 있을 경우 발생
      * @throws com.practic.demo.member.exceptions.MemberStatusNotAllowed - 허용되지 않는 상태 변경일 경우 발생
      */
@@ -84,7 +85,7 @@ public interface MemberService {
      * @param memberId - 정보를 수정할 회원의 식별코드
      * @param command  - 회원 정보 수정 요청 커맨드 (닉네임, 이메일, 전화번호 포함)
      * @return - 수정된 회원 정보 (MemberEntity)
-     * @throws com.practic.demo.member.exceptions.MemberNotFound - 해당 ID의 회원을 찾을 수 없을 경우 발생
+     * @throws com.practic.demo.member.exceptions.MemberNotFound   - 해당 ID의 회원을 찾을 수 없을 경우 발생
      * @throws com.practic.demo.member.exceptions.MemberDuplicated - 닉네임 또는 이메일이 중복될 경우 발생
      */
     MemberEntity updateMemberInfo(Long memberId, MemberCommand.UpdateMemberInfoCommand command);
@@ -95,8 +96,8 @@ public interface MemberService {
      *
      * @param memberId - 비밀번호를 변경할 회원의 식별코드
      * @param password - 변경할 새로운 비밀번호
-     * @throws com.practic.demo.member.exceptions.MemberNotFound - 해당 ID의 회원을 찾을 수 없을 경우 발생
-     * @throws com.practic.demo.member.exceptions.MemberPasswordNotEquals - 현재 비밀번호와 새 비밀번호가 일치하지 않을 경우 발생
+     * @throws com.practic.demo.member.exceptions.MemberNotFound                 - 해당 ID의 회원을 찾을 수 없을 경우 발생
+     * @throws com.practic.demo.member.exceptions.MemberPasswordNotEquals        - 현재 비밀번호와 새 비밀번호가 일치하지 않을 경우 발생
      * @throws com.practic.demo.member.exceptions.MemberPasswordIsOriginPassword - 새 비밀번호가 기존 비밀번호와 동일할 경우 발생
      */
     void changePassword(Long memberId, String password);
@@ -119,4 +120,10 @@ public interface MemberService {
      * @return - 페이징된 회원 정보 목록 (Page<MemberEntity>)
      */
     Page<MemberEntity> getMembersByStatus(MemberStatus status, Pageable pageable);
+
+
+    /**
+     * [SRC_03] 가입일 기준 조회
+     */
+    List<MemberEntity> getMembersByJoinDate(LocalDate start, LocalDate end);
 }

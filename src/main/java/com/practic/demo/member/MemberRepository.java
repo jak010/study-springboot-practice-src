@@ -3,6 +3,8 @@ package com.practic.demo.member;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,4 +31,8 @@ public interface MemberRepository {
     Page<MemberEntity> findMembersByStatus(MemberStatus status, Pageable pageable);
 
     boolean deleteMemberById(Long memberId);
+
+
+    List<MemberEntity> findMemberByCreatedDate(LocalDate start, LocalDate end);
+
 }
