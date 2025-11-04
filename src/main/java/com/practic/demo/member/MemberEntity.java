@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
+import org.springframework.data.relational.core.mapping.Column;
 
 @Getter
 @Setter
@@ -19,6 +20,8 @@ public class MemberEntity {
     private String password;
     private String phoneNumber;
     private String status;
+    
+    
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
