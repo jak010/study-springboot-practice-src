@@ -35,35 +35,19 @@ public class MemberRepositoryImpl implements MemberRepository {
 
     @Override
     public MemberEntity save(MemberEntity memberEntity) {
-        // Java Text Block(Java 15이상)
-//        final String insertQuery = """
-//                        INSERT INTO %s (
-//                          nick_name,
-//                          email,
-//                          password,
-//                          phone_number,
-//                          status
-//                        )
-//                        VALUE (:nickName, :email, :password, :phone_number, :status);
-//                """;
-//        final String query = String.format(insertQuery, TABLE);
-//        GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
-//        namedParameterJdbcTemplate.update(query, params, keyHolder);
-//        long key = Objects.requireNonNull(keyHolder.getKey()).longValue();
-
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(dataSource).withTableName(TABLE)
             .usingGeneratedKeyColumns("id");
+        
         final MapSqlParameterSource params = new MapSqlParameterSource()
-            .addValue("nickName", memberEntity.getNickName())
             .addValue("email", memberEntity.getEmail())
+            .addValue("nickName", memberEntity.getNickName())
             .addValue("password", memberEntity.getPassword())
             .addValue("phone_number", memberEntity.getPhoneNumber())
             .addValue("status", memberEntity.getStatus())
             .addValue("created_at", LocalDateTime.now())
             .addValue("updated_at", LocalDateTime.now());
-
         Number key = simpleJdbcInsert.executeAndReturnKey(params);
-
+        
         memberEntity.setMemberId(key.longValue());
 
         return memberEntity;
