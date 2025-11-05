@@ -49,7 +49,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public MemberEntity registerMember(MemberCommand.CreateMemberCommand command) {
-        Optional<MemberEntity> isSavedMember = memberRepository.duplicateCheck(command.getEmail(), command.getNickName());
+        Optional<MemberEntity> isSavedMember = memberRepository.findByEmailAndUserName(command.getEmail(), command.getNickName());
         if (isSavedMember.isPresent()) {
             throw new MemberDuplicated();
         }

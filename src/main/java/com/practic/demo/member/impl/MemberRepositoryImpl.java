@@ -37,7 +37,7 @@ public class MemberRepositoryImpl implements MemberRepository {
     public MemberEntity save(MemberEntity memberEntity) {
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(dataSource).withTableName(TABLE)
             .usingGeneratedKeyColumns("id");
-        
+
         final MapSqlParameterSource params = new MapSqlParameterSource()
             .addValue("email", memberEntity.getEmail())
             .addValue("nickName", memberEntity.getNickName())
@@ -47,7 +47,7 @@ public class MemberRepositoryImpl implements MemberRepository {
             .addValue("created_at", LocalDateTime.now())
             .addValue("updated_at", LocalDateTime.now());
         Number key = simpleJdbcInsert.executeAndReturnKey(params);
-        
+
         memberEntity.setMemberId(key.longValue());
 
         return memberEntity;
@@ -128,7 +128,7 @@ public class MemberRepositoryImpl implements MemberRepository {
     }
 
     @Override
-    public Optional<MemberEntity> duplicateCheck(String email, String nickName) {
+    public Optional<MemberEntity> findByEmailAndUserName(String email, String nickName) {
         final String query = String.format(
             "SELECT * FROM %s WHERE email = :email AND nick_name = :nickName;", TABLE);
         final MapSqlParameterSource params = new MapSqlParameterSource();
@@ -145,8 +145,6 @@ public class MemberRepositoryImpl implements MemberRepository {
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
-
-
     }
 
     @Override
