@@ -1,9 +1,7 @@
 package com.practic.demo.contrib;
 
-import com.practic.demo.interceptor.CustomInterceptor;
-import lombok.RequiredArgsConstructor;
+import com.practic.demo.interceptor.RequestLoggingInterceptor;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -13,6 +11,6 @@ public class interceptorConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new CustomInterceptor()).addPathPatterns("/*");
+        registry.addInterceptor(new RequestLoggingInterceptor()).addPathPatterns("/*");
     }
 }
