@@ -17,3 +17,9 @@ logging:
   level:
     org.springframework.transaction.interceptor: trace
 
+
+    # Request Logging ?
+    org:
+      springframework:
+        web:
+          filter: DEBUG
