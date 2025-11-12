@@ -33,7 +33,7 @@ dependencies {
     implementation 'org.bouncycastle:bcpkix-jdk18on:1.78'   // PKIX, 인증서 관련 유틸
 
     implementation 'commons-io:commons-io:2.15.1' // Apache Utils
-
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
 
 
     implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
