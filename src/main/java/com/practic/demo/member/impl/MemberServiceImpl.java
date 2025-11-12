@@ -5,6 +5,7 @@ import com.practic.demo.member.exceptions.MemberDuplicated;
 import com.practic.demo.member.exceptions.MemberNotFound;
 import com.practic.demo.member.exceptions.MemberPasswordIsOriginPassword;
 import com.practic.demo.member.exceptions.MemberStatusAlreadySet;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jasypt.encryption.StringEncryptor;
@@ -21,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.web.context.request.RequestContextHolder;
 
 @Slf4j
 @Service
@@ -49,17 +51,18 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public MemberEntity registerMember(MemberCommand.CreateMemberCommand command) {
-        Optional<MemberEntity> isSavedMember = memberRepository.findByEmailAndUserName(command.getEmail(), command.getNickName());
+
+        Optional<MemberEntity> isSavedMember = memberRepository.findByEmailAndUserName(
+            command.getEmail(), command.getNickName());
         if (isSavedMember.isPresent()) {
             throw new MemberDuplicated();
         }
 
-
         MemberEntity memberEntity = MemberEntity.newMemberBuilder()
-                .email(command.getEmail())
-                .nickName(command.getNickName())
-                .password(aesEncryptor.encrypt(command.getPassword()))
-                .build();
+            .email(command.getEmail())
+            .nickName(command.getNickName())
+            .password(aesEncryptor.encrypt(command.getPassword()))
+            .build();
 
         return memberRepository.save(memberEntity);
     }
@@ -98,7 +101,8 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public MemberEntity updateMemberStatus(Long memberId, MemberStatus status) {
-        MemberEntity memberEntity = memberRepository.findMemberById(memberId).orElseThrow(MemberNotFound::new);
+        MemberEntity memberEntity = memberRepository.findMemberById(memberId)
+            .orElseThrow(MemberNotFound::new);
 
         if (memberEntity.statusCompare(status)) {
             throw new MemberStatusAlreadySet();
@@ -147,16 +151,20 @@ public class MemberServiceImpl implements MemberService {
      */
     @Override
     @Transactional
-    public MemberEntity updateMemberInfo(Long memberId, MemberCommand.UpdateMemberInfoCommand command) {
-        MemberEntity memberEntity = memberRepository.findMemberById(memberId).orElseThrow(MemberNotFound::new);
+    public MemberEntity updateMemberInfo(Long memberId,
+        MemberCommand.UpdateMemberInfoCommand command) {
+        MemberEntity memberEntity = memberRepository.findMemberById(memberId)
+            .orElseThrow(MemberNotFound::new);
 
         // 닉네임 변경 시 중복 체크
-        if (!memberEntity.getNickName().equals(command.getNickName()) && isNicknameDuplicate(command.getNickName())) {
+        if (!memberEntity.getNickName().equals(command.getNickName()) && isNicknameDuplicate(
+            command.getNickName())) {
             throw new MemberDuplicated();
         }
 
         // 이메일 변경 시 중복 체크
-        if (!memberEntity.getEmail().equals(command.getEmail()) && isEmailDuplicate(command.getEmail())) {
+        if (!memberEntity.getEmail().equals(command.getEmail()) && isEmailDuplicate(
+            command.getEmail())) {
             throw new MemberDuplicated();
         }
 
@@ -170,7 +178,8 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public void changePassword(Long memberId, String password) {
-        MemberEntity memberEntity = memberRepository.findMemberById(memberId).orElseThrow(MemberNotFound::new);
+        MemberEntity memberEntity = memberRepository.findMemberById(memberId)
+            .orElseThrow(MemberNotFound::new);
 
         // 기존에 저장된 password가 복호화가 불가능한 경우 어떻게 대처할 수 있을까 ?
         try {
@@ -178,10 +187,10 @@ public class MemberServiceImpl implements MemberService {
             if (originPassword.equals(password)) {
                 throw new MemberPasswordIsOriginPassword();
             }
-        } catch (EncryptionOperationNotPossibleException e) { // 25-10-28: 암호화에 사용된 알고리즘이 다른 경우에도 해당 에러가 발생한다.
+        } catch (
+            EncryptionOperationNotPossibleException e) { // 25-10-28: 암호화에 사용된 알고리즘이 다른 경우에도 해당 에러가 발생한다.
             log.warn("회원 ID {} 비밀번호 복호화 실패: {}", memberId, e.getMessage());
         }
-
 
         memberEntity.setPassword(desEncryptor.encrypt(password));
         memberRepository.updateMemberPassword(memberEntity);
@@ -196,9 +205,8 @@ public class MemberServiceImpl implements MemberService {
         String temporalPasswordEncryptor = aesEncryptor.encrypt(temporalPassword);
 
         MemberEntity memberEntity = memberRepository.findMemberById(memberId)
-                .orElseThrow(MemberNotFound::new);
+            .orElseThrow(MemberNotFound::new);
         memberEntity.setPassword(temporalPasswordEncryptor);
-
 
         memberRepository.updateMemberPassword(memberEntity);
     }
